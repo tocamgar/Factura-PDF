@@ -6,6 +6,9 @@ const btnAgregarItem = document.getElementById('btnAgregarItem');
 const btnLimpiar = document.getElementById('btnLimpiar');
 const btnDescargarPDF = document.getElementById('btnDescargarPDF');
 const btnImprimir = document.getElementById('btnImprimir');
+const btnGuardarFactura = document.getElementById('btnGuardarFactura');
+const btnCargarFactura = document.getElementById('btnCargarFactura');
+const inputCargarArchivo = document.getElementById('inputCargarArchivo');
 const fechaInput = document.getElementById('fecha');
 
 // Establecer fecha actual por defecto
@@ -19,6 +22,9 @@ btnAgregarItem.addEventListener('click', agregarItem);
 btnLimpiar.addEventListener('click', limpiarFormulario);
 btnDescargarPDF.addEventListener('click', descargarPDF);
 btnImprimir.addEventListener('click', imprimirFactura);
+btnGuardarFactura.addEventListener('click', guardarFactura);
+btnCargarFactura.addEventListener('click', () => inputCargarArchivo.click());
+inputCargarArchivo.addEventListener('change', cargarFactura);
 itemsContainer.addEventListener('click', eliminarItem);
 
 // Función para agregar un nuevo item
@@ -76,6 +82,122 @@ function obtenerDatos() {
         moneda: document.getElementById('moneda').value,
         notas: document.getElementById('notas').value
     };
+}
+
+// Función para cargar datos en el formulario
+function cargarDatos(datos) {
+    document.getElementById('empresa').value = datos.empresa;
+    document.getElementById('numero').value = datos.numero;
+    document.getElementById('fecha').value = datos.fecha;
+    document.getElementById('cliente').value = datos.cliente;
+    document.getElementById('rut').value = datos.rut;
+    document.getElementById('email').value = datos.email;
+    document.getElementById('direccion').value = datos.direccion;
+    document.getElementById('iva').value = datos.iva;
+    document.getElementById('moneda').value = datos.moneda;
+    document.getElementById('notas').value = datos.notas;
+
+    // Limpiar items anteriores
+    itemsContainer.innerHTML = '';
+
+    // Cargar items
+    datos.items.forEach(item => {
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'item';
+        itemDiv.innerHTML = `
+            <input type="text" class="descripcion" placeholder="Descripción del producto/servicio" value="${item.descripcion}" required>
+            <input type="number" class="cantidad" placeholder="Cantidad" value="${item.cantidad}" min="1" required>
+            <input type="number" class="precio" placeholder="Precio" value="${item.precio}" min="0" step="0.01" required>
+            <button type="button" class="btn btn-danger btn-eliminar" title="Eliminar">✕</button>
+        `;
+        itemsContainer.appendChild(itemDiv);
+
+        // Agregar event listeners
+        itemDiv.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', actualizarPreview);
+            input.addEventListener('change', actualizarPreview);
+        });
+    });
+
+    actualizarPreview();
+}
+
+// Función para guardar factura en archivo JSON
+function guardarFactura() {
+    const datos = obtenerDatos();
+    
+    if (!datos.numero.trim()) {
+        alert('Por favor, ingrese un número de factura');
+        return;
+    }
+
+    const jsonString = JSON.stringify(datos, null, 2);
+    const blob = new Blob([jsonString], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `factura_${datos.numero.replace(/[\/\\:*?"<>|]/g, '-')}.json`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    // Mostrar notificación
+    mostrarNotificacion(`✓ Factura guardada como: factura_${datos.numero}.json`, 'success');
+}
+
+// Función para cargar factura desde archivo JSON
+function cargarFactura(e) {
+    const file = e.target.files[0];
+    
+    if (!file) return;
+
+    // Validar que sea un archivo JSON
+    if (!file.name.endsWith('.json')) {
+        alert('Por favor, seleccione un archivo JSON válido');
+        return;
+    }
+
+    const reader = new FileReader();
+    
+    reader.onload = function(event) {
+        try {
+            const datos = JSON.parse(event.target.result);
+            
+            // Validar que el archivo tenga la estructura correcta
+            if (!datos.empresa || !datos.numero || !Array.isArray(datos.items)) {
+                throw new Error('Archivo inválido: estructura de factura no reconocida');
+            }
+            
+            cargarDatos(datos);
+            mostrarNotificacion(`✓ Factura cargada correctamente: ${datos.numero}`, 'success');
+        } catch (error) {
+            alert(`Error al cargar el archivo: ${error.message}`);
+        }
+    };
+
+    reader.readAsText(file);
+    
+    // Limpiar el input
+    inputCargarArchivo.value = '';
+}
+
+// Función para mostrar notificaciones
+function mostrarNotificacion(mensaje, tipo = 'info') {
+    const notificacion = document.createElement('div');
+    notificacion.className = `notificacion notificacion-${tipo}`;
+    notificacion.textContent = mensaje;
+    
+    document.body.appendChild(notificacion);
+    
+    // Animar entrada
+    setTimeout(() => notificacion.classList.add('mostrar'), 10);
+    
+    // Eliminar después de 3 segundos
+    setTimeout(() => {
+        notificacion.classList.remove('mostrar');
+        setTimeout(() => notificacion.remove(), 300);
+    }, 3000);
 }
 
 // Función para calcular totales
@@ -268,6 +390,7 @@ function limpiarFormulario() {
         
         document.getElementById('fecha').value = hoy;
         actualizarPreview();
+        mostrarNotificacion('✓ Formulario limpiado correctamente', 'success');
     }
 }
 

@@ -35,7 +35,7 @@ function agregarItem(e) {
     item.innerHTML = `
         <input type="text" class="descripcion" placeholder="Descripción del producto/servicio" required>
         <input type="number" class="cantidad" placeholder="Cantidad" value="1" min="1" required>
-        <input type="number" class="precio" placeholder="Precio" value="0" min="0" step="0.01" required>
+        <input type="number" class="precio" placeholder="Precio (€)" value="0" min="0" step="0.01" required>
         <button type="button" class="btn btn-danger btn-eliminar" title="Eliminar">✕</button>
     `;
     itemsContainer.appendChild(item);
@@ -79,7 +79,6 @@ function obtenerDatos() {
         direccion: document.getElementById('direccion').value,
         items: items,
         iva: parseFloat(document.getElementById('iva').value) || 0,
-        moneda: document.getElementById('moneda').value,
         notas: document.getElementById('notas').value
     };
 }
@@ -94,7 +93,6 @@ function cargarDatos(datos) {
     document.getElementById('email').value = datos.email;
     document.getElementById('direccion').value = datos.direccion;
     document.getElementById('iva').value = datos.iva;
-    document.getElementById('moneda').value = datos.moneda;
     document.getElementById('notas').value = datos.notas;
 
     // Limpiar items anteriores
@@ -107,7 +105,7 @@ function cargarDatos(datos) {
         itemDiv.innerHTML = `
             <input type="text" class="descripcion" placeholder="Descripción del producto/servicio" value="${item.descripcion}" required>
             <input type="number" class="cantidad" placeholder="Cantidad" value="${item.cantidad}" min="1" required>
-            <input type="number" class="precio" placeholder="Precio" value="${item.precio}" min="0" step="0.01" required>
+            <input type="number" class="precio" placeholder="Precio (€)" value="${item.precio}" min="0" step="0.01" required>
             <button type="button" class="btn btn-danger btn-eliminar" title="Eliminar">✕</button>
         `;
         itemsContainer.appendChild(itemDiv);
@@ -209,16 +207,15 @@ function calcularTotales(datos) {
     return { subtotal, ivaAmount, total };
 }
 
-// Función para formatear moneda
-function formatearMoneda(valor, moneda) {
-    const simbolo = moneda === 'USD' ? 'USD ' : moneda === 'EUR' ? '€ ' : moneda;
-    return simbolo + valor.toLocaleString('es-CL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+// Función para formatear euros
+function formatearEuros(valor) {
+    return '€ ' + valor.toLocaleString('es-ES', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 // Función para formatear fecha
 function formatearFecha(fecha) {
     const date = new Date(fecha + 'T00:00:00');
-    return date.toLocaleDateString('es-CL', { year: 'numeric', month: 'long', day: 'numeric' });
+    return date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
 }
 
 // Función para actualizar la vista previa
@@ -266,8 +263,8 @@ function actualizarPreview() {
                 <tr>
                     <td>${item.descripcion}</td>
                     <td class="text-right">${item.cantidad}</td>
-                    <td class="text-right">${formatearMoneda(item.precio, datos.moneda)}</td>
-                    <td class="text-right">${formatearMoneda(totalItem, datos.moneda)}</td>
+                    <td class="text-right">${formatearEuros(item.precio)}</td>
+                    <td class="text-right">${formatearEuros(totalItem)}</td>
                 </tr>
             `;
         });
@@ -279,15 +276,15 @@ function actualizarPreview() {
             <div class="totales">
                 <div class="totales-row">
                     <span>Subtotal:</span>
-                    <span>${formatearMoneda(subtotal, datos.moneda)}</span>
+                    <span>${formatearEuros(subtotal)}</span>
                 </div>
                 <div class="totales-row">
                     <span>IVA (${datos.iva}%):</span>
-                    <span>${formatearMoneda(ivaAmount, datos.moneda)}</span>
+                    <span>${formatearEuros(ivaAmount)}</span>
                 </div>
                 <div class="totales-row total">
                     <span>TOTAL:</span>
-                    <span>${formatearMoneda(total, datos.moneda)}</span>
+                    <span>${formatearEuros(total)}</span>
                 </div>
             </div>
         `;
@@ -377,7 +374,7 @@ function limpiarFormulario() {
             <div class="item">
                 <input type="text" class="descripcion" placeholder="Descripción del producto/servicio" required>
                 <input type="number" class="cantidad" placeholder="Cantidad" value="1" min="1" required>
-                <input type="number" class="precio" placeholder="Precio" value="0" min="0" step="0.01" required>
+                <input type="number" class="precio" placeholder="Precio (€)" value="0" min="0" step="0.01" required>
                 <button type="button" class="btn btn-danger btn-eliminar" title="Eliminar">✕</button>
             </div>
         `;

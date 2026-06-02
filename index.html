@@ -127,10 +127,8 @@
         .btn-success {
             background: #27ae60;
             color: white;
-            width: 100%;
-            padding: 15px;
-            font-size: 16px;
-            margin-top: 20px;
+            padding: 12px 20px;
+            font-size: 15px;
         }
 
         .btn-success:hover {
@@ -157,11 +155,19 @@
         .btn-secondary {
             background: #95a5a6;
             color: white;
-            margin-right: 5px;
         }
 
         .btn-secondary:hover {
             background: #7f8c8d;
+        }
+
+        .btn-info {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-info:hover {
+            background: #2980b9;
         }
 
         .preview {
@@ -257,12 +263,26 @@
 
         .buttons-group {
             display: flex;
+            flex-wrap: wrap;
             gap: 10px;
             margin-top: 20px;
         }
 
         .buttons-group .btn {
             flex: 1;
+            min-width: 100px;
+        }
+
+        .buttons-group-full {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .buttons-group-full .btn {
+            flex: 1;
+            min-width: 100px;
         }
 
         @media (max-width: 768px) {
@@ -276,6 +296,11 @@
 
             h1 {
                 grid-column: 1;
+            }
+
+            .buttons-group .btn,
+            .buttons-group-full .btn {
+                min-width: auto;
             }
         }
 
@@ -293,6 +318,58 @@
             margin-top: 15px;
             font-size: 12px;
             color: #555;
+        }
+
+        /* Estilos para notificaciones */
+        .notificacion {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-weight: 600;
+            z-index: 9999;
+            opacity: 0;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+            max-width: 300px;
+        }
+
+        .notificacion.mostrar {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .notificacion-success {
+            background: #27ae60;
+            color: white;
+            border-left: 4px solid #229954;
+        }
+
+        .notificacion-error {
+            background: #e74c3c;
+            color: white;
+            border-left: 4px solid #c0392b;
+        }
+
+        .notificacion-info {
+            background: #3498db;
+            color: white;
+            border-left: 4px solid #2980b9;
+        }
+
+        /* Input file oculto */
+        #inputCargarArchivo {
+            display: none;
+        }
+
+        /* Separador visual */
+        .separator {
+            margin-top: 25px;
+            margin-bottom: 15px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
         }
     </style>
 </head>
@@ -382,10 +459,27 @@
                     <textarea id="notas" rows="3" placeholder="Términos de pago, condiciones, etc.">Gracias por su compra. Pago en 30 días.</textarea>
                 </div>
 
-                <!-- Botones de acción -->
+                <!-- Separador -->
+                <div class="separator"></div>
+
+                <!-- Botones de Guardar/Cargar -->
+                <h3 style="color: #1f4788; margin-bottom: 15px;">Guardar y Cargar</h3>
+                <div class="buttons-group-full">
+                    <button type="button" class="btn btn-info" id="btnGuardarFactura">💾 Guardar Factura</button>
+                    <button type="button" class="btn btn-info" id="btnCargarFactura">📂 Cargar Factura</button>
+                </div>
+
+                <!-- Input oculto para cargar archivo -->
+                <input type="file" id="inputCargarArchivo" accept=".json">
+
+                <!-- Separador -->
+                <div class="separator"></div>
+
+                <!-- Botones de acción principales -->
+                <h3 style="color: #1f4788; margin-bottom: 15px;">Acciones</h3>
                 <div class="buttons-group">
                     <button type="button" class="btn btn-secondary" id="btnLimpiar">Limpiar</button>
-                    <button type="button" class="btn btn-success" id="btnDescargarPDF">💾 Descargar PDF</button>
+                    <button type="button" class="btn btn-success" id="btnDescargarPDF">📄 Descargar PDF</button>
                 </div>
             </form>
         </div>
@@ -394,7 +488,7 @@
         <div class="panel">
             <h2>Vista Previa</h2>
             <div class="preview" id="preview"></div>
-            <button type="button" class="btn btn-secondary" id="btnImprimir" style="width: 100%;">🖨 Imprimir</button>
+            <button type="button" class="btn btn-secondary" id="btnImprimir" style="width: 100%;">🖨️ Imprimir</button>
         </div>
     </div>
 

@@ -374,7 +374,7 @@
     </style>
 </head>
 <body>
-    <h1>📄 Generador de Facturas PDF</h1>
+    <h1>📄 Generador de Facturas en Euros</h1>
 
     <div class="container">
         <!-- PANEL IZQUIERDO: FORMULARIO -->
@@ -429,7 +429,7 @@
                     <div class="item">
                         <input type="text" class="descripcion" placeholder="Descripción del producto/servicio" value="Producto 1" required>
                         <input type="number" class="cantidad" placeholder="Cantidad" value="1" min="1" required>
-                        <input type="number" class="precio" placeholder="Precio" value="100.00" min="0" step="0.01" required>
+                        <input type="number" class="precio" placeholder="Precio (€)" value="100.00" min="0" step="0.01" required>
                         <button type="button" class="btn btn-danger btn-eliminar" title="Eliminar">✕</button>
                     </div>
                 </div>
@@ -439,19 +439,9 @@
                 <!-- Configuración -->
                 <h3 style="color: #1f4788; margin-top: 25px; margin-bottom: 15px;">Configuración</h3>
 
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="iva">IVA (%)</label>
-                        <input type="number" id="iva" value="19" min="0" max="100" step="0.01">
-                    </div>
-                    <div class="form-group">
-                        <label for="moneda">Moneda</label>
-                        <select id="moneda">
-                            <option value="$">Pesos Chilenos ($)</option>
-                            <option value="USD">Dólares (USD)</option>
-                            <option value="EUR">Euros (EUR)</option>
-                        </select>
-                    </div>
+                <div class="form-group">
+                    <label for="iva">IVA (%)</label>
+                    <input type="number" id="iva" value="21" min="0" max="100" step="0.01">
                 </div>
 
                 <div class="form-group">

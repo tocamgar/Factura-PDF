@@ -224,10 +224,6 @@ function actualizarPreview() {
     const { subtotal, ivaAmount, total } = calcularTotales(datos);
 
     let html = `
-        <div class="invoice-header">
-            <div class="invoice-title">FACTURA</div>
-        </div>
-
         <div class="invoice-info">
             <div class="info-item"><span class="info-label">Empresa:</span> ${datos.empresa}</div>
             <div class="info-item"><span class="info-label">Número:</span> ${datos.numero}</div>
@@ -339,7 +335,6 @@ function imprimirFactura() {
             <title>Factura ${datos.numero}</title>
             <style>
                 body { font-family: Arial, sans-serif; padding: 20px; }
-                .invoice-title { font-size: 28px; font-weight: bold; color: #1f4788; text-align: center; margin-bottom: 20px; }
                 .invoice-header { border-bottom: 3px solid #1f4788; padding-bottom: 15px; margin-bottom: 15px; }
                 .invoice-info { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
                 .info-item { padding: 5px 0; }

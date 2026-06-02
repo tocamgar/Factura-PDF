@@ -70,13 +70,20 @@ function obtenerDatos() {
     });
 
     return {
-        empresa: document.getElementById('empresa').value,
+        nombreEmpresa: document.getElementById('nombreEmpresa').value,
+        cif: document.getElementById('cif').value,
+        direccion: document.getElementById('direccion').value,
+        codigoPostal: document.getElementById('codigoPostal').value,
+        ciudad: document.getElementById('ciudad').value,
+        provincia: document.getElementById('provincia').value,
+        iban: document.getElementById('iban').value,
+        metodoPago: document.getElementById('metodoPago').value,
         numero: document.getElementById('numero').value,
         fecha: document.getElementById('fecha').value,
         cliente: document.getElementById('cliente').value,
         rut: document.getElementById('rut').value,
         email: document.getElementById('email').value,
-        direccion: document.getElementById('direccion').value,
+        direccionCliente: document.getElementById('direccionCliente').value,
         items: items,
         iva: parseFloat(document.getElementById('iva').value) || 0,
         notas: document.getElementById('notas').value
@@ -85,13 +92,20 @@ function obtenerDatos() {
 
 // Función para cargar datos en el formulario
 function cargarDatos(datos) {
-    document.getElementById('empresa').value = datos.empresa;
+    document.getElementById('nombreEmpresa').value = datos.nombreEmpresa;
+    document.getElementById('cif').value = datos.cif;
+    document.getElementById('direccion').value = datos.direccion;
+    document.getElementById('codigoPostal').value = datos.codigoPostal;
+    document.getElementById('ciudad').value = datos.ciudad;
+    document.getElementById('provincia').value = datos.provincia;
+    document.getElementById('iban').value = datos.iban;
+    document.getElementById('metodoPago').value = datos.metodoPago;
     document.getElementById('numero').value = datos.numero;
     document.getElementById('fecha').value = datos.fecha;
     document.getElementById('cliente').value = datos.cliente;
     document.getElementById('rut').value = datos.rut;
     document.getElementById('email').value = datos.email;
-    document.getElementById('direccion').value = datos.direccion;
+    document.getElementById('direccionCliente').value = datos.direccionCliente;
     document.getElementById('iva').value = datos.iva;
     document.getElementById('notas').value = datos.notas;
 
@@ -163,7 +177,7 @@ function cargarFactura(e) {
             const datos = JSON.parse(event.target.result);
             
             // Validar que el archivo tenga la estructura correcta
-            if (!datos.empresa || !datos.numero || !Array.isArray(datos.items)) {
+            if (!datos.nombreEmpresa || !datos.numero || !Array.isArray(datos.items)) {
                 throw new Error('Archivo inválido: estructura de factura no reconocida');
             }
             
@@ -224,17 +238,27 @@ function actualizarPreview() {
     const { subtotal, ivaAmount, total } = calcularTotales(datos);
 
     let html = `
-        <div class="invoice-info">
-            <div class="info-item"><span class="info-label">Empresa:</span> ${datos.empresa}</div>
-            <div class="info-item"><span class="info-label">Número:</span> ${datos.numero}</div>
-            <div class="info-item"><span class="info-label">Fecha:</span> ${formatearFecha(datos.fecha)}</div>
-            <div class="info-item"><span class="info-label">Cliente:</span> ${datos.cliente}</div>
+        <!-- Información de la empresa -->
+        <div class="company-info">
+            <div class="company-name">${datos.nombreEmpresa}</div>
+            <div class="company-detail">CIF: ${datos.cif}</div>
+            <div class="company-detail">${datos.direccion}</div>
+            <div class="company-detail">${datos.codigoPostal} ${datos.ciudad} (${datos.provincia})</div>
+            <div class="company-detail">IBAN: ${datos.iban}</div>
+            <div class="company-detail" style="font-weight: bold; margin-top: 8px;">${datos.metodoPago}</div>
         </div>
 
-        <div style="border-top: 1px solid #ddd; padding-top: 10px; margin-top: 10px;">
+        <div class="invoice-info">
+            <div class="info-item"><span class="info-label">Número:</span> ${datos.numero}</div>
+            <div class="info-item"><span class="info-label">Fecha:</span> ${formatearFecha(datos.fecha)}</div>
+        </div>
+
+        <h3 style="color: #1f4788; font-size: 14px; margin: 15px 0 10px 0;">Cliente</h3>
+        <div class="invoice-info">
+            <div class="info-item"><span class="info-label">Nombre:</span> ${datos.cliente}</div>
             <div class="info-item"><span class="info-label">RUT/ID:</span> ${datos.rut}</div>
             <div class="info-item"><span class="info-label">Email:</span> ${datos.email}</div>
-            <div class="info-item"><span class="info-label">Dirección:</span> ${datos.direccion}</div>
+            <div class="info-item"><span class="info-label">Dirección:</span> ${datos.direccionCliente}</div>
         </div>
     `;
 
@@ -335,18 +359,21 @@ function imprimirFactura() {
             <title>Factura ${datos.numero}</title>
             <style>
                 body { font-family: Arial, sans-serif; padding: 20px; }
-                .invoice-header { border-bottom: 3px solid #1f4788; padding-bottom: 15px; margin-bottom: 15px; }
-                .invoice-info { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+                .company-info { background: #f9f9f9; padding: 15px; border-radius: 5px; margin-bottom: 20px; border-left: 4px solid #1f4788; font-size: 12px; line-height: 1.6; }
+                .company-name { font-weight: bold; font-size: 14px; margin-bottom: 5px; }
+                .company-detail { margin: 3px 0; }
+                .invoice-info { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; font-size: 13px; }
                 .info-item { padding: 5px 0; }
                 .info-label { font-weight: bold; color: #1f4788; }
-                .invoice-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+                .invoice-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 12px; }
                 .invoice-table th { background: #1f4788; color: white; padding: 10px; text-align: left; font-weight: bold; }
                 .invoice-table td { padding: 8px 10px; border-bottom: 1px solid #ddd; }
                 .text-right { text-align: right; }
                 .totales { margin-top: 20px; border-top: 2px solid #1f4788; padding-top: 15px; }
-                .totales-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-bottom: 8px; }
+                .totales-row { display: grid; grid-template-columns: 1fr auto; gap: 10px; margin-bottom: 8px; font-size: 13px; }
                 .totales-row.total { font-size: 16px; font-weight: bold; color: #1f4788; border-top: 1px solid #ddd; padding-top: 10px; }
                 .nota { background: #ecf0f1; padding: 10px; border-radius: 5px; margin-top: 15px; font-size: 12px; }
+                h3 { color: #1f4788; font-size: 14px; margin: 15px 0 10px 0; }
                 @media print { body { padding: 0; } }
             </style>
         </head>
@@ -381,6 +408,7 @@ function limpiarFormulario() {
         });
         
         document.getElementById('fecha').value = hoy;
+        document.getElementById('metodoPago').value = 'CONFIRMING';
         actualizarPreview();
         mostrarNotificacion('✓ Formulario limpiado correctamente', 'success');
     }

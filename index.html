@@ -78,6 +78,12 @@
             gap: 10px;
         }
 
+        .form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
         .items-container {
             background: #f5f5f5;
             padding: 15px;
@@ -211,6 +217,26 @@
             color: #1f4788;
         }
 
+        .company-info {
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #1f4788;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .company-name {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .company-detail {
+            margin: 3px 0;
+        }
+
         .invoice-table {
             width: 100%;
             border-collapse: collapse;
@@ -291,6 +317,10 @@
             }
 
             .item {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row-3 {
                 grid-template-columns: 1fr;
             }
 
@@ -382,10 +412,59 @@
             <h2>Datos de la Factura</h2>
             <form id="facturaForm">
                 <!-- Datos de la Empresa -->
+                <h3 style="color: #1f4788; margin-top: 0; margin-bottom: 15px;">Empresa</h3>
+
                 <div class="form-group">
-                    <label for="empresa">Nombre de la Empresa</label>
-                    <input type="text" id="empresa" value="Mi Empresa" required>
+                    <label for="nombreEmpresa">Nombre y Apellidos</label>
+                    <input type="text" id="nombreEmpresa" value="Juan García López" required>
                 </div>
+
+                <div class="form-group">
+                    <label for="cif">CIF</label>
+                    <input type="text" id="cif" value="99.999.999-A" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="direccion">Dirección</label>
+                    <input type="text" id="direccion" value="CALLE NOMBRE Nº 00 PUERTA 0" required>
+                </div>
+
+                <div class="form-row-3">
+                    <div class="form-group">
+                        <label for="codigoPostal">Código Postal</label>
+                        <input type="text" id="codigoPostal" value="46380" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ciudad">Ciudad</label>
+                        <input type="text" id="ciudad" value="CHESTE" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="provincia">Provincia</label>
+                        <input type="text" id="provincia" value="VALENCIA" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="iban">IBAN</label>
+                    <input type="text" id="iban" value="ES00 0000 0000 0000 0000 0000" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="metodoPago">Método de Pago</label>
+                    <select id="metodoPago" required>
+                        <option value="CONFIRMING">PAGO EN CONFIRMING</option>
+                        <option value="TRANSFERENCIA">TRANSFERENCIA BANCARIA</option>
+                        <option value="EFECTIVO">EFECTIVO</option>
+                        <option value="CHEQUE">CHEQUE</option>
+                        <option value="OTRO">OTRO</option>
+                    </select>
+                </div>
+
+                <!-- Separador -->
+                <div class="separator"></div>
+
+                <!-- Datos de la Factura -->
+                <h3 style="color: #1f4788; margin-bottom: 15px;">Factura</h3>
 
                 <div class="form-row">
                     <div class="form-group">
@@ -418,8 +497,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="direccion">Dirección</label>
-                    <input type="text" id="direccion" value="Calle Principal 123">
+                    <label for="direccionCliente">Dirección</label>
+                    <input type="text" id="direccionCliente" value="Calle Principal 123">
                 </div>
 
                 <!-- Items de la Factura -->
